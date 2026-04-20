@@ -1,11 +1,29 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Dashboard from "./components/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
+import "./index.css";
 
 function App() {
   return (
-    <div>
-      <h1>💰 Escape the Rat Race</h1>
-      <Dashboard />
-    </div>
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
+    </Router>
   );
 }
 
