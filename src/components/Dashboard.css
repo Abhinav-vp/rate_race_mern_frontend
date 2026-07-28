@@ -98,6 +98,18 @@
 .expense-icon { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
 .status-icon { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
 
+.visuals-grid {
+  margin-bottom: 40px;
+}
+
+.chart-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 32px;
+}
+
 .stat-info h3 {
   color: var(--text-muted);
   font-size: 14px;
@@ -204,6 +216,27 @@
 .item-amount { font-weight: 600; font-size: 16px; }
 .income-text { color: var(--secondary); }
 .expense-text { color: var(--danger); }
+
+.delete-item-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  opacity: 0.5;
+}
+
+.delete-item-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  opacity: 1;
+  transform: scale(1.1);
+}
 
 .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
 .transactions-list::-webkit-scrollbar { width: 6px; }

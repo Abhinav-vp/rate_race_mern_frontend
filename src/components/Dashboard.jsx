@@ -12,8 +12,12 @@ import {
   User,
   Wallet,
   IndianRupee,
-  History
+  History,
+  PieChart as ChartIcon,
+  Trash2
 } from "lucide-react";
+import TransactionChart from "./TransactionChart";
+import ChatMentor from "./ChatMentor";
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -26,7 +30,7 @@ const Dashboard = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get("http://localhost:7000/api/all", {
+      const res = await axios.get("http://localhost:7001/api/all", {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setTransactions(res.data);
@@ -39,6 +43,17 @@ const Dashboard = () => {
     if (user) fetchData();
   }, [user]);
 
+  const deleteTransaction = async (id) => {
+    try {
+      await axios.delete(`http://localhost:7001/api/${id}`, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      fetchData();
+    } catch (err) {
+      console.error("Failed to delete transaction", err);
+    }
+  };
+
   const addTransaction = async (e) => {
     e.preventDefault();
     if (!amount || isSubmitting) return;
@@ -46,7 +61,7 @@ const Dashboard = () => {
     setIsSubmitting(true);
     try {
       await axios.post(
-        "http://localhost:7000/api/add",
+        "http://localhost:7001/api/add",
         {
           type,
           amount: Number(amount),
@@ -121,6 +136,21 @@ const Dashboard = () => {
           </motion.div>
         </div>
 
+        <div className="visuals-grid">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ delay: 0.4 }} 
+            className="chart-card"
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px" }}>
+              <ChartIcon size={20} />
+              <h2 style={{ marginBottom: 0 }}>Financial Breakdown</h2>
+            </div>
+            <TransactionChart income={income} expense={expense} />
+          </motion.div>
+        </div>
+
         <div className="dashboard-main">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="action-card">
             <h2>Add Transaction</h2>
@@ -186,8 +216,17 @@ const Dashboard = () => {
                           <p style={{ fontSize: "12px", color: "var(--text-muted)" }}>{new Date(t.date).toLocaleDateString()}</p>
                         </div>
                       </div>
-                      <div className={`item-amount ${t.type === 'income' ? 'income-text' : 'expense-text'}`}>
-                        {t.type === 'income' ? '+' : '-'} ₹{t.amount.toLocaleString()}
+                      <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                        <div className={`item-amount ${t.type === 'income' ? 'income-text' : 'expense-text'}`}>
+                          {t.type === 'income' ? '+' : '-'} ₹{t.amount.toLocaleString()}
+                        </div>
+                        <button 
+                          onClick={() => deleteTransaction(t._id)}
+                          className="delete-item-btn"
+                          title="Delete Transaction"
+                        >
+                          <Trash2 size={16} />
+                        </button>
                       </div>
                     </motion.div>
                   ))
@@ -197,6 +236,7 @@ const Dashboard = () => {
           </motion.div>
         </div>
       </div>
+      <ChatMentor />
     </div>
   );
 };
